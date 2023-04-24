@@ -46,11 +46,11 @@ private:
 
 	/** A physics object
 	*/
-	GameObject* _physics_object;
-	GameObject* _physics_object2;
+	//GameObject* _physics_object;  //comment out both for kinematic
+	//GameObject* _physics_object2;
 
-	//KinematicsObject* _physics_object;
-	//KinematicsObject* _physics_object2;
+	KinematicsObject* _physics_object;       //uncomment both for kinematic
+	KinematicsObject* _physics_object2;
 
 	// Initial velocity variable of the physics object 
 	//for Exercise 5: Use kinematics equations to compute free fall

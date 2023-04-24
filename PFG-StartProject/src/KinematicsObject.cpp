@@ -2,7 +2,7 @@
 
 KinematicsObject::KinematicsObject()
 {
-	GameObject();
+	GameObject::GameObject();
 }
 
 KinematicsObject::~KinematicsObject()

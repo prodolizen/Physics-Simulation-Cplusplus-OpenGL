@@ -103,6 +103,7 @@ private:
 	*/
 	bool _start;
 
+	
 };
 
 #endif //!_KinematicsObject_H_

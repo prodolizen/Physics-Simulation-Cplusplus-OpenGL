@@ -1,5 +1,4 @@
 #include "Scene.h"
-
 /*! \brief Brief description.
 *  Scene class is a container for loading all the game objects in your simulation or your game.
 *
@@ -16,12 +15,12 @@ Scene::Scene()
 	_lightPosition = glm::vec3(10, 10, 0);
 
 	//create a kinematics object
-	//_physics_object = new KinematicsObject();
-	//_physics_object2 = new KinematicsObject();
+	_physics_object = new KinematicsObject();
+	_physics_object2 = new KinematicsObject();
 
 	// Create a game object
-	_physics_object = new GameObject();
-	_physics_object2 = new GameObject();
+	//_physics_object = new GameObject();
+	//_physics_object2 = new GameObject();
 	
 	// Create a game level object
 	_level = new GameObject();
@@ -79,18 +78,18 @@ Scene::Scene()
 	modelMesh->LoadOBJ("assets/models/sphere.obj");
 	// Tell the game object to use this mesh
 	_physics_object->SetMesh(modelMesh);
-	_physics_object->SetPosition(glm::vec3(-3.0f, radius_ball1, 0.0f));
-	_physics_object->SetScale(radius_ball1, radius_ball1, radius_ball1);			//comment out when kinematic obj
+	_physics_object->SetPosition(glm::vec3(0.0f, radius_ball1, 0.0f));
+	//_physics_object->SetScale(radius_ball1, radius_ball1, radius_ball1);			//comment out when kinematic obj
 	//Set initial velocity if using phyics object									//comment out when kinematic obj
-	_v_c = glm::vec3(0.0f, 2.0f, 0.0f);											//comment out when kinematic obj
+	//_v_c = glm::vec3(0.0f, 2.0f, 0.0f);											//comment out when kinematic obj
 	accRobber = 5.0f; //acc robber
-	////for kinematic..																					//UNCOMMENT when kinematic obj
-	//float accelY = accRobber;																			//UNCOMMENT when kinematic obj
-	//float accelX = accelY / tan(glm::radians(75.0f)); //give vector X component using TOA				//UNCOMMENT when kinematic obj
-	//float accelZ = accelX * tan(glm::radians(-10.0f)); //give vector Z component of displacement		//UNCOMMENT when kinematic obj
-	//_physics_object->SetScale(glm::vec3(radius_ball1, radius_ball1, radius_ball1));						//UNCOMMENT when kinematic obj
-	//_physics_object->SetVelocity(glm::vec3(0.0f, 2.0f, 0.0f));											//UNCOMMENT when kinematic obj
-	//_physics_object->SetAcceleration(glm::vec3(accelX, accelY, accelZ));								//UNCOMMENT when kinematic obj
+	//for kinematic..																					//UNCOMMENT when kinematic obj
+	float accelY = accRobber;																			//UNCOMMENT when kinematic obj
+	float accelX = accelY / tan(glm::radians(75.0f)); //give vector X component using TOA				//UNCOMMENT when kinematic obj
+	float accelZ = accelX * tan(glm::radians(-10.0f)); //give vector Z component of displacement		//UNCOMMENT when kinematic obj
+	_physics_object->SetScale(glm::vec3(radius_ball1, radius_ball1, radius_ball1));						//UNCOMMENT when kinematic obj
+	_physics_object->SetVelocity(glm::vec3(0.0f, 2.0f, 0.0f));											//UNCOMMENT when kinematic obj
+	_physics_object->SetAcceleration(glm::vec3(accelX, accelY, accelZ));								//UNCOMMENT when kinematic obj
 
 
 	//2nd ball
@@ -120,15 +119,15 @@ Scene::Scene()
 	// Tell the game object to use this mesh
 	_physics_object2->SetMesh(modelMesh2);
 	_physics_object2->SetPosition(glm::vec3(2.0f, 10.0f, 0.0f));
-	_physics_object2->SetScale(radius_ball2, radius_ball2, radius_ball2);					//comment out when kinematic obj
-	//Set initial velocity																	//comment out when kinematic obj
-	_v_c2 = glm::vec3(0.0f, 0.0f, 0.0f);													//comment out when kinematic obj
+	//_physics_object2->SetScale(radius_ball2, radius_ball2, radius_ball2);					//comment out when kinematic obj
+	////Set initial velocity																	//comment out when kinematic obj
+	//_v_c2 = glm::vec3(0.0f, 0.0f, 0.0f);													//comment out when kinematic obj
 	accCop = 0.1f; // acceleration of cop 
 
  // //for kinematic..																		//UNCOMMENT when kinematic obj
-	//_physics_object2->SetScale(glm::vec3(radius_ball2, radius_ball2, radius_ball2));		//UNCOMMENT when kinematic obj
-	//_physics_object2->SetVelocity(glm::vec3(0.0f, 0.0f, 0.0f));								//UNCOMMENT when kinematic obj
-	//_physics_object2->SetAcceleration(glm::vec3(0.0f,accCop,0.0f));							//UNCOMMENT when kinematic obj
+	_physics_object2->SetScale(glm::vec3(radius_ball2, radius_ball2, radius_ball2));		//UNCOMMENT when kinematic obj
+	_physics_object2->SetVelocity(glm::vec3(0.0f, 0.0f, 0.0f));								//UNCOMMENT when kinematic obj
+	_physics_object2->SetAcceleration(glm::vec3(0.0f,accCop,0.0f));							//UNCOMMENT when kinematic obj
 }
 
 Scene::~Scene()
@@ -142,7 +141,7 @@ Scene::~Scene()
 
 void Scene::Update(float deltaTs, Input* input)
 {
-	
+	std::cout << "Ball 1 radius " << radius_ball1 << "ball 2 radius " << radius_ball2 << endl;
 	// Update the game object (this is currently hard-coded motion)
 	if (input->cmd_x)
 	{
@@ -151,19 +150,19 @@ void Scene::Update(float deltaTs, Input* input)
 	if (_simulation_start == true)
 	{
 
-		//update velocity of ball so it doesnt fall at const speed												//comment out when kinematic obj
-		_v_c.y = _v_c.y + (accRobber * deltaTs);																	//comment out when kinematic obj
-		//calculate how far it moves																				//comment out when kinematic obj
-		float displacementY = (_v_c.y * deltaTs) + 0.5 * accRobber * pow(deltaTs, 2);								//comment out when kinematic obj
-		float displacementX = displacementY / tan(glm::radians(63.0f)); //give vector X component using TOA		//comment out when kinematic obj
-		float displacementZ = displacementX * tan(glm::radians(0.0f)); //give vector Z component of displacement	//comment out when kinematic obj
+		////update velocity of ball so it doesnt fall at const speed												//comment out when kinematic obj
+		//_v_c.y = _v_c.y + (accRobber * deltaTs);																	//comment out when kinematic obj
+		////calculate how far it moves																				//comment out when kinematic obj
+		//float displacementY = (_v_c.y * deltaTs) + 0.5 * accRobber * pow(deltaTs, 2);								//comment out when kinematic obj
+		//float displacementX = displacementY / tan(glm::radians(63.0f)); //give vector X component using TOA		//comment out when kinematic obj
+		//float displacementZ = displacementX * tan(glm::radians(0.0f)); //give vector Z component of displacement	//comment out when kinematic obj
 		glm::vec3 pos = _physics_object->GetPosition();
 		
 		if (arrowCanShoot == true)
 		{
-			//_physics_object->UpdateKinematics(deltaTs);														//UNCOMMENT when kinematic obj
-			pos += glm::vec3(displacementX, displacementY, displacementZ); //moves ball							//comment out when kinematic obj
-			_physics_object->SetPosition(pos);																	//comment out when kinematic obj
+			_physics_object->UpdateKinematics(deltaTs);														//UNCOMMENT when kinematic obj
+			//pos += glm::vec3(displacementX, displacementY, displacementZ); //moves ball							//comment out when kinematic obj
+			//_physics_object->SetPosition(pos);																	//comment out when kinematic obj
 		}
 
 		//ball 2 put in Update function kinematics cpp, 1 set kinematic eq, keep collision detection here. basically make generic kinematic equation and change values for each ball
@@ -181,16 +180,16 @@ void Scene::Update(float deltaTs, Input* input)
 		{
 			pos += glm::vec3(0.0f, -displacementApple, 0.0f); //moves ball
 			_physics_object->SetPosition(pos);
-			//_physics_object->SetVelocity(glm::vec3(0,0,0));								//UNCOMMENT when kinematic obj
-			//_physics_object->SetAcceleration(glm::vec3(0, accCop, 0));					//UNCOMMENT when kinematic obj
+			_physics_object->SetVelocity(glm::vec3(0,0,0));								//UNCOMMENT when kinematic obj
+			_physics_object->SetAcceleration(glm::vec3(0, accCop, 0));					//UNCOMMENT when kinematic obj
 		}
 
 		// Calculate the distance between the two balls' center points
-		float distance = glm::distance(ball1Pos+radius_ball1, ball2Pos+radius_ball2);
+		float distance = glm::distance(ball1Pos+radius_ball1, ball2Pos+radius_ball2);   
 
 		// Calculate the sum of the two balls' radii
 		float sumRadii = radius_ball1 + radius_ball2;
-		std::cout << distance - sumRadii << endl;
+		//std::cout << distance - sumRadii << endl;
 		// If the distance between the balls is less than or equal to the sum of their radii, then they have collided
 		if (distance <= sumRadii)
 		{
@@ -198,6 +197,23 @@ void Scene::Update(float deltaTs, Input* input)
 			arrowHit = true;
 			arrowCanShoot = false;
 		}
+
+	/*	float distanceLeft = glm::distance(ball1Pos + radius_ball1, ball2Pos - radius_ball2);
+		float distanceRight = glm::distance(ball1Pos - radius_ball1, ball2Pos + radius_ball2);
+
+		if (distanceLeft <= sumRadii)
+		{
+			std::cout << "left hit" << endl;
+			arrowHit = true;
+			arrowCanShoot = false;
+		}
+		if(distanceRight <= sumRadii)
+		{
+			std::cout << "right hit" << endl;
+			arrowHit = true;
+			arrowCanShoot = false;
+		}*/
+
 
 		if (arrowHit == true)
 		{
@@ -221,7 +237,6 @@ void Scene::Update(float deltaTs, Input* input)
 		//     7 Update the model matrix for graphics engine to draw 
 		//   
 	 
-		
 		// Lab 2: Exercise 4: compute collision with the ground
 		if (pos.y < radius_ball1)
 		{
