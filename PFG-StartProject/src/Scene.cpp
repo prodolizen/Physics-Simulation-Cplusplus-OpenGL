@@ -15,9 +15,9 @@ Scene::Scene()
 	_lightPosition = glm::vec3(10, 10, 0);
 
 	//create a kinematics object
-	_physics_object = new KinematicsObject();
-	_physics_object2 = new KinematicsObject();
-
+	_physics_object_arrow = new KinematicsObject();
+	//_physics_object_apple = new KinematicsObject();
+	_physics_object_apple = new DynamicObject();
 	// Create a game object
 	//_physics_object = new GameObject();
 	//_physics_object2 = new GameObject();
@@ -53,7 +53,7 @@ Scene::Scene()
 	_level->SetRotation(3.141590f, 0.0f, 0.0f);
 
 
-	// Create the material for the game object- level
+	// Create the material for the game object- level arrow
 	radius_ball1 = 0.5f;
 	Material *objectMaterial = new Material();
 	// Shaders are now in files
@@ -70,15 +70,15 @@ Scene::Scene()
 	// If you change the light's position you need to call this again
 	objectMaterial->SetLightPosition(_lightPosition);
 	// Tell the level object to use this material
-	_physics_object->SetMaterial(objectMaterial);
+	_physics_object_arrow->SetMaterial(objectMaterial);
 
 	// Set the geometry for the object
 	Mesh *modelMesh = new Mesh();
 	// Load from OBJ file. This must have triangulated geometry
 	modelMesh->LoadOBJ("assets/models/sphere.obj");
 	// Tell the game object to use this mesh
-	_physics_object->SetMesh(modelMesh);
-	_physics_object->SetPosition(glm::vec3(0.0f, radius_ball1, 0.0f));
+	_physics_object_arrow->SetMesh(modelMesh);
+	_physics_object_arrow->SetPosition(glm::vec3(0.0f, radius_ball1, 0.0f));
 	//_physics_object->SetScale(radius_ball1, radius_ball1, radius_ball1);			//comment out when kinematic obj
 	//Set initial velocity if using phyics object									//comment out when kinematic obj
 	//_v_c = glm::vec3(0.0f, 2.0f, 0.0f);											//comment out when kinematic obj
@@ -87,12 +87,12 @@ Scene::Scene()
 	float accelY = accRobber;																			//UNCOMMENT when kinematic obj
 	float accelX = accelY / tan(glm::radians(75.0f)); //give vector X component using TOA				//UNCOMMENT when kinematic obj
 	float accelZ = accelX * tan(glm::radians(-10.0f)); //give vector Z component of displacement		//UNCOMMENT when kinematic obj
-	_physics_object->SetScale(glm::vec3(radius_ball1, radius_ball1, radius_ball1));						//UNCOMMENT when kinematic obj
-	_physics_object->SetVelocity(glm::vec3(0.0f, 2.0f, 0.0f));											//UNCOMMENT when kinematic obj
-	_physics_object->SetAcceleration(glm::vec3(accelX, accelY, accelZ));								//UNCOMMENT when kinematic obj
+	_physics_object_arrow->SetScale(glm::vec3(radius_ball1, radius_ball1, radius_ball1));						//UNCOMMENT when kinematic obj
+	_physics_object_arrow->SetVelocity(glm::vec3(0.0f, 2.0f, 0.0f));											//UNCOMMENT when kinematic obj
+	_physics_object_arrow->SetAcceleration(glm::vec3(accelX, accelY, accelZ));								//UNCOMMENT when kinematic obj
 
 
-	//2nd ball
+	//2nd ball apple
 	radius_ball2 = 0.3f;
 	// Create the material for the game object- level
 	Material *objectMaterial2 = new Material();
@@ -110,31 +110,39 @@ Scene::Scene()
 	// If you change the light's position you need to call this again
 	objectMaterial2->SetLightPosition(_lightPosition);
 	// Tell the level object to use this material
-	_physics_object2->SetMaterial(objectMaterial2);
+	_physics_object_apple->SetMaterial(objectMaterial2);
 
 	// Set the geometry for the object | stationary ball 
 	Mesh *modelMesh2 = new Mesh();
 	// Load from OBJ file. This must have triangulated geometry
 	modelMesh2->LoadOBJ("assets/models/sphere.obj");
 	// Tell the game object to use this mesh
-	_physics_object2->SetMesh(modelMesh2);
-	_physics_object2->SetPosition(glm::vec3(2.0f, 10.0f, 0.0f));
+	//_physics_object_apple->SetMesh(modelMesh2);
+	//_physics_object_apple->SetPosition(glm::vec3(2.0f, 10.0f, 0.0f));
 	//_physics_object2->SetScale(radius_ball2, radius_ball2, radius_ball2);					//comment out when kinematic obj
 	////Set initial velocity																	//comment out when kinematic obj
 	//_v_c2 = glm::vec3(0.0f, 0.0f, 0.0f);													//comment out when kinematic obj
 	accCop = 0.1f; // acceleration of cop 
 
  // //for kinematic..																		//UNCOMMENT when kinematic obj
-	_physics_object2->SetScale(glm::vec3(radius_ball2, radius_ball2, radius_ball2));		//UNCOMMENT when kinematic obj
-	_physics_object2->SetVelocity(glm::vec3(0.0f, 0.0f, 0.0f));								//UNCOMMENT when kinematic obj
-	_physics_object2->SetAcceleration(glm::vec3(0.0f,accCop,0.0f));							//UNCOMMENT when kinematic obj
+	//_physics_object_apple->SetScale(glm::vec3(radius_ball2, radius_ball2, radius_ball2));		//UNCOMMENT when kinematic obj
+	//_physics_object_apple->SetVelocity(glm::vec3(0.0f, 0.0f, 0.0f));								//UNCOMMENT when kinematic obj
+	//_physics_object_apple->SetAcceleration(glm::vec3(0.0f,accCop,0.0f));		//UNCOMMENT when kinematic obj
+
+	//dynamic stuff 
+	_physics_object_apple->SetMesh(modelMesh2);
+	_physics_object_apple->SetPosition(glm::vec3(2.0f, 10.0f, 0.0f));
+	_physics_object_apple->SetVelocity(glm::vec3(0.0f, 0.0f, 0.0f));
+	_physics_object_apple->SetMass(2.0f);
+	_physics_object_apple->SetScale(glm::vec3(0.3f, 0.3f, 0.3f));
+	_physics_object_apple->SetBoundingRadius(0.3f);
 }
 
 Scene::~Scene()
 {
 	// You should neatly clean everything up here
-	delete _physics_object;
-	delete _physics_object2;
+	delete _physics_object_arrow;
+	delete _physics_object_apple;
 	delete _level;
 	delete _camera;
 }
@@ -156,11 +164,10 @@ void Scene::Update(float deltaTs, Input* input)
 		//float displacementY = (_v_c.y * deltaTs) + 0.5 * accRobber * pow(deltaTs, 2);								//comment out when kinematic obj
 		//float displacementX = displacementY / tan(glm::radians(63.0f)); //give vector X component using TOA		//comment out when kinematic obj
 		//float displacementZ = displacementX * tan(glm::radians(0.0f)); //give vector Z component of displacement	//comment out when kinematic obj
-		glm::vec3 pos = _physics_object->GetPosition();
 		
 		if (arrowCanShoot == true)
 		{
-			_physics_object->UpdateKinematics(deltaTs);														//UNCOMMENT when kinematic obj
+			_physics_object_arrow->UpdateKinematics(deltaTs);														//UNCOMMENT when kinematic obj
 			//pos += glm::vec3(displacementX, displacementY, displacementZ); //moves ball							//comment out when kinematic obj
 			//_physics_object->SetPosition(pos);																	//comment out when kinematic obj
 		}
@@ -170,18 +177,17 @@ void Scene::Update(float deltaTs, Input* input)
 		_v_c2.y = _v_c2.y + (accCop * deltaTs); //*
 		//calculate how far it moves
 		float displacementApple = (_v_c2.y * deltaTs) + 0.5 * accCop * pow(deltaTs, 2); //*
-		glm::vec3 pos2 = _physics_object2->GetPosition();//*
 
 		// Get the positions of the two balls
-		glm::vec3 ball1Pos = _physics_object->GetPosition();
-		glm::vec3 ball2Pos = _physics_object2->GetPosition();
+		glm::vec3 ball1Pos = _physics_object_arrow->GetPosition();
+		glm::vec3 ball2Pos = _physics_object_apple->GetPosition();
 
 		if(arrowCanShoot == false) //applies the downwards displacement of the apple to the arrow once they collide so they fall together
 		{
-			pos += glm::vec3(0.0f, -displacementApple, 0.0f); //moves ball
-			_physics_object->SetPosition(pos);
-			_physics_object->SetVelocity(glm::vec3(0,0,0));								//UNCOMMENT when kinematic obj
-			_physics_object->SetAcceleration(glm::vec3(0, accCop, 0));					//UNCOMMENT when kinematic obj
+			ball1Pos += glm::vec3(0.0f, -displacementApple, 0.0f); //moves ball
+			_physics_object_arrow->SetPosition(ball1Pos);
+			_physics_object_arrow->SetVelocity(glm::vec3(0,0,0));								//UNCOMMENT when kinematic obj
+			_physics_object_arrow->SetAcceleration(glm::vec3(0, accCop, 0));					//UNCOMMENT when kinematic obj
 		}
 
 		// Calculate the distance between the two balls' center points
@@ -217,8 +223,8 @@ void Scene::Update(float deltaTs, Input* input)
 
 		if (arrowHit == true)
 		{
-			pos2 += glm::vec3(0.0, -displacementApple, 0.0); //moves ball
-			_physics_object2->SetPosition(pos2);
+			ball2Pos += glm::vec3(0.0, -displacementApple, 0.0); //moves ball
+			_physics_object_apple->SetPosition(ball2Pos);
 		}
 
 		
@@ -238,19 +244,19 @@ void Scene::Update(float deltaTs, Input* input)
 		//   
 	 
 		// Lab 2: Exercise 4: compute collision with the ground
-		if (pos.y < radius_ball1)
+		if (ball1Pos.y < radius_ball1)
 		{
-			pos.y = radius_ball1;
-			_physics_object->SetPosition(pos);
+			ball1Pos.y = radius_ball1;
+			_physics_object_arrow->SetPosition(ball1Pos);
 		}
-		if (pos2.y < radius_ball2)
+		if (ball2Pos.y < radius_ball2)
 		{
-			pos2.y = radius_ball2;
-			_physics_object2->SetPosition(pos2);
+			ball2Pos.y = radius_ball2;
+			_physics_object_apple->SetPosition(ball2Pos);
 		}
 	}
-	_physics_object->Update(deltaTs);
-	_physics_object2->Update(deltaTs);
+	_physics_object_arrow->Update(deltaTs);
+	_physics_object_apple->Update(deltaTs);
 	_level->Update(deltaTs);
 	_camera->Update(input);
 
@@ -262,8 +268,8 @@ void Scene::Update(float deltaTs, Input* input)
 void Scene::Draw()
 {
 	// Draw objects, giving the camera's position and projection
-	_physics_object->Draw(_viewMatrix, _projMatrix);
-	_physics_object2->Draw(_viewMatrix, _projMatrix);
+	_physics_object_arrow->Draw(_viewMatrix, _projMatrix);
+	_physics_object_apple->Draw(_viewMatrix, _projMatrix);
 	_level->Draw(_viewMatrix, _projMatrix);
 
 }
