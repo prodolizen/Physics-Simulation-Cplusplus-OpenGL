@@ -61,8 +61,9 @@ private:
 
 	bool caughtRobber = false;
 	//ball radius'
-	float radius_ball1;
-	float radius_ball2;
+	float radiusArrow;
+	float radiusApple;
+	glm::vec3 vel;
 
 	/** An example game level in the scene
 	*/
@@ -85,8 +86,8 @@ private:
 	bool _simulation_start;
 
 	
-	float accCop = 0.0f; // acceleration of cop 
-	float accRobber = 0.0f; //acc robber
+	float accelerationApple = 0.0f; // acceleration of cop 
+	float accelerationArrow = 0.0f; //acc robber
 	bool arrowHit = false;
 	bool arrowCanShoot = true;
 

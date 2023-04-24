@@ -165,6 +165,7 @@
     <ClCompile Include="src\Material.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\Scene.cpp" />
+    <ClCompile Include="src\Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h" />
@@ -177,6 +178,7 @@
     <ClInclude Include="src\Material.h" />
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Scene.h" />
+    <ClInclude Include="src\Utility.h" />
     <ClInclude Include="src\wglew.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

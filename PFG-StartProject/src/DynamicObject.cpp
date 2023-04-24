@@ -2,6 +2,8 @@
 #include <GLM/gtc/type_ptr.hpp>
 #include <GLM/gtc/matrix_transform.hpp>
 #include <GLM/gtx/rotate_vector.hpp>
+#include "Utility.h"
+
 
 DynamicObject::DynamicObject()
 {
@@ -33,14 +35,35 @@ void DynamicObject::Update(float deltaTs)
 		AddForce(gravityForce);
 
 		//3: compute collisions and responses
-		if (_position.y <= 0.3f)
+		glm::vec3 bounceForce;
+		glm::vec3 n = glm::vec3(0.0f, 1.0f, 0.0f);
+		glm::vec3 c0 = _position;
+		glm::vec3 q = glm::vec3(0.0f, 0.0f, 0.0f);
+		glm::vec3 c1 = _position + _velocity * deltaTs;
+		glm::vec3 ci(0);
+		float r = GetBoundingRadius();
+		float d = PFG::DistanceToPlane(n, c0, q);
+
+		bool collision = PFG::MovingSphereToPlaneCollision(n, c0, c1, q, r, ci);
+		if (collision)
 		{
-			_position.y = 0.3f;
+			_position = glm::vec3(c0.x, r, c0.z);
+			//_position = ci;
+			//_position = ci + glm::vec3(0.0f, r, 0.0f);
+
+			glm::vec3 contact_force = glm::vec3(0.0f, 9.8f * _mass, 0.0f);
+			AddForce(contact_force);
+		}
+		if (d<= r)
+		{
 			glm::vec3 bounceForce = glm::vec3(0.0f, 150.0f, 0.0f);
 			AddForce(bounceForce);
 		}
 		//4: euler integration
 		Euler(deltaTs);
+		//Verlet(deltaTs);
+		//RungeKutta2(deltaTs);
+		//RungeKutta4(deltaTs);
 	}
 
 	//update model matrix with current pos, orientation and scale
