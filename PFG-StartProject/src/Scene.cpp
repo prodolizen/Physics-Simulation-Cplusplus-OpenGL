@@ -18,6 +18,8 @@ Scene::Scene()
 	_physics_object_arrow = new KinematicsObject();
 	//_physics_object_apple = new KinematicsObject();
 	_physics_object_apple = new DynamicObject();
+	_physics_object_ball1 = new DynamicObject();
+	_physics_object_ball2 = new DynamicObject();
 	// Create a game object
 	//_physics_object = new GameObject();
 	//_physics_object2 = new GameObject();
@@ -51,7 +53,7 @@ Scene::Scene()
 	_level->SetMesh(groundMesh);
 	_level->SetPosition(0.0f, 0.0f, 0.0f);
 	_level->SetRotation(3.141590f, 0.0f, 0.0f);
-	_level->SetScale(2.0f, 1.0f, 1.0f);
+	_level->SetScale(2.0f, 1.0f, 2.0f);
 
 
 	// Create the material for the game object- level arrow
@@ -143,6 +145,38 @@ Scene::Scene()
 	_physics_object_apple->SetMass(3.0f);
 	_physics_object_apple->SetScale(glm::vec3(radiusApple, radiusApple, radiusApple));
 	_physics_object_apple->SetBoundingRadius(0.3f);
+
+	//lab 7 / ball1
+	_physics_object_ball1->SetMesh(modelMesh);
+	_physics_object_ball1->SetPosition(glm::vec3(0.0f, 5.0f, 0.0f));
+	_physics_object_ball1->SetMass(3.0f);
+	_physics_object_ball1->SetBoundingRadius(0.3f);
+	_physics_object_ball1->SetScale(glm::vec3(0.3f, 0.3f, 0.3f));
+
+	Material* objectMaterial4 = new Material();
+	objectMaterial4->LoadShaders("assets/shaders/VertShader.txt", "assets/shaders/FragShader.txt");
+	objectMaterial4->SetDiffuseColour(glm::vec3(0.0, 1.0, 1.0));
+	objectMaterial4->SetTexture("assets/textures/default.bmp");
+	objectMaterial4->SetLightPosition(_lightPosition);
+
+	_physics_object_ball1->SetMaterial(objectMaterial4);
+	_physics_object_ball1->SetVelocity(glm::vec3(0.0f, 0.0f, 0.0f));
+	
+	//ball 2
+	_physics_object_ball2->SetMesh(modelMesh);
+	_physics_object_ball2->SetPosition(glm::vec3(0.0f, 1.3f, 0.0f));
+	_physics_object_ball2->SetMass(30.0f);
+	_physics_object_ball2->SetBoundingRadius(0.3f);
+	_physics_object_ball2->SetScale(glm::vec3(0.3f, 0.3f, 0.3f));
+
+	Material* objectMaterial3 = new Material();
+	objectMaterial3->LoadShaders("assets/shaders/VertShader.txt", "assets/shaders/FragShader.txt");
+	objectMaterial3->SetDiffuseColour(glm::vec3(1.0, 0.0, 1.0));
+	objectMaterial3->SetTexture("assets/textures/default.bmp");
+	objectMaterial3->SetLightPosition(_lightPosition);
+
+	_physics_object_ball2->SetMaterial(objectMaterial3);
+	_physics_object_ball2->SetVelocity(glm::vec3(0.0f, 0.0f, 0.0f));
 }
 
 Scene::~Scene()
@@ -152,6 +186,8 @@ Scene::~Scene()
 	delete _physics_object_apple;
 	delete _level;
 	delete _camera;
+	delete _physics_object_ball1;
+	delete _physics_object_ball2;
 }
 
 void Scene::Update(float deltaTs, Input* input)
@@ -178,6 +214,8 @@ void Scene::Update(float deltaTs, Input* input)
 			//_physics_object->SetPosition(pos);																	//comment out when kinematic obj
 		
 		_physics_object_arrow->StartSimulation(_simulation_start);
+		_physics_object_ball1->StartSimulation(_simulation_start);
+		_physics_object_ball2->StartSimulation(_simulation_start);
 		//ball 2 put in Update function kinematics cpp, 1 set kinematic eq, keep collision detection here. basically make generic kinematic equation and change values for each ball
 		//update velocity of ball so it doesnt fall at const speed
 		//_v_c2.y = _v_c2.y + (accelerationApple * deltaTs); //*
@@ -250,9 +288,12 @@ void Scene::Update(float deltaTs, Input* input)
 	_physics_object_apple->Update(deltaTs);
 	_level->Update(deltaTs);
 	_camera->Update(input);
+	_physics_object_ball1->Update(deltaTs);
+	_physics_object_ball2->Update(deltaTs);
 
 	_viewMatrix = _camera->GetView();
 	_projMatrix = _camera->GetProj();
+	
 														
 }
 
@@ -262,6 +303,8 @@ void Scene::Draw()
 	_physics_object_arrow->Draw(_viewMatrix, _projMatrix);
 	_physics_object_apple->Draw(_viewMatrix, _projMatrix);
 	_level->Draw(_viewMatrix, _projMatrix);
+	_physics_object_ball1->Draw(_viewMatrix, _projMatrix);
+	_physics_object_ball2->Draw(_viewMatrix, _projMatrix);
 
 }
 

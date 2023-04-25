@@ -123,7 +123,10 @@ public:
 	*/
 	void StartSimulation(bool start) { _start = start; }
 
+	//lab7
+	void ComputeCollisionForces(float deltaTs);
 
+	glm::vec3 GetVelocity() { return _velocity; }
 private:
 
 	/**Update the model matrix with the current position, orientation and scale
@@ -165,7 +168,7 @@ private:
 	*/
 	bool _start;
     
-	GameObject* _other_object;
+	DynamicObject* _other_object;
 };
 
 #endif //!_DynamicObject_H_

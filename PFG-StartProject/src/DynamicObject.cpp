@@ -76,6 +76,54 @@ void DynamicObject::Euler(float deltaTs)
 	//compute the current pos based on prev pos
 	_position += _velocity * deltaTs;
 }
+//lab7
+void DynamicObject::ComputeCollisionForces(float deltaTs)
+{
+	//// a sphere to plane collision detection
+	//float elasticity = 0.5f;
+	//glm::vec3 n = glm::vec3(0.0f, 1.0f, 0.0f);
+	//glm::vec3 c0 = _position;
+	//glm::vec3 q = glm::vec3(0.0f, 0.0f, 0.0f);
+	//glm::vec3 c1 = _position + _velocity * deltaTs;
+	//glm::vec3 ci(0);
+	//float r = GetBoundingRadius();
+	//
+	//bool collision = PFG::MovingSphereToPlaneCollision(n, c0, c1, q, r, ci);
+	//if (collision)
+	//{
+	//	glm::vec3 plane_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
+	//	float collision_impulse = -(1 + elasticity) * glm::dot(_velocity - plane_velocity, n) / (1.0f / _mass);
+	//	glm::vec3 collision_impulse_vector = collision_impulse * n;
+	//	_velocity += collision_impulse_vector / _mass;
+	//	glm::vec3 contact_force = glm::vec3(0.0f, 9.8f * _mass, 0.0f);
+	//	AddForce(contact_force);
+	//}
+
+	float elasticity = 0.9f;
+	glm::vec3 position_distance = _other_object->GetPosition() - _position;
+	glm::vec3 n = glm::normalize(position_distance);
+	float r1 = _bRadius;
+	float r2 = _other_object->GetBoundingRadius();
+	glm::vec3 object2_velocity = _other_object->GetVelocity();
+	float distance = glm::length(position_distance);
+
+	if (distance <= r1 + r2)
+	{
+		float one_over_mass1 = 1.0f / _mass;
+		float one_over_mass2 = 1.0f / _other_object->GetMass();
+		float collision_impulse = -(1 + elasticity) * glm::dot((_velocity - object2_velocity), n) / (one_over_mass1 + one_over_mass2);
+		glm::vec3 collision_impulse_vector = collision_impulse * n;;
+		_velocity += collision_impulse_vector / _mass;
+		glm::vec3 contact_force = glm::vec3(0.0f, 9.8f * _mass, 0.0f);
+		AddForce(contact_force);
+
+		object2_velocity -= collision_impulse_vector / _other_object->GetMass();
+		_other_object->SetVelocity(object2_velocity);
+		
+		glm::vec3 contact_force2 = glm::vec3(0.0f, 9.8f * _other_object->GetMass(), 0.0f);
+		_other_object->AddForce(contact_force2);
+	}
+}
 
 void DynamicObject::UpdateModelMatrix()
 {
