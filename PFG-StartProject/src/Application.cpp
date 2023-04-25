@@ -12,7 +12,7 @@
 */
 
 // Define a fixed step length for stable physics simulations
-static float STEP_LENGTH = 0.03;
+static float STEP_LENGTH = 0.03f;
 
 Application::Application()
 {

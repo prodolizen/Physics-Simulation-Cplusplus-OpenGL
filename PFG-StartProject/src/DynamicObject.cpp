@@ -36,13 +36,13 @@ void DynamicObject::Update(float deltaTs)
 
 		//3: compute collisions and responses
 		glm::vec3 bounceForce;
-		glm::vec3 n = glm::vec3(0.0f, 1.0f, 0.0f);
-		glm::vec3 c0 = _position;
-		glm::vec3 q = glm::vec3(0.0f, 0.0f, 0.0f);
+		glm::vec3 n = glm::vec3(0.0f, 1.0f, 0.0f); //plane normal
+		glm::vec3 c0 = _position; //point on plane
+		glm::vec3 q = glm::vec3(0.0f, 0.0f, 0.0f); //plane vel
 		glm::vec3 c1 = _position + _velocity * deltaTs;
 		glm::vec3 ci(0);
 		float r = GetBoundingRadius();
-		float d = PFG::DistanceToPlane(n, c0, q);
+		//float d = PFG::DistanceToPlane(n, c0, q);
 
 		bool collision = PFG::MovingSphereToPlaneCollision(n, c0, c1, q, r, ci);
 		if (collision)
@@ -53,9 +53,6 @@ void DynamicObject::Update(float deltaTs)
 
 			glm::vec3 contact_force = glm::vec3(0.0f, 9.8f * _mass, 0.0f);
 			AddForce(contact_force);
-		}
-		if (d<= r)
-		{
 			glm::vec3 bounceForce = glm::vec3(0.0f, 150.0f, 0.0f);
 			AddForce(bounceForce);
 		}

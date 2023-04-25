@@ -156,7 +156,7 @@ Scene::~Scene()
 
 void Scene::Update(float deltaTs, Input* input)
 {
-	std::cout << "Ball 1 radius " << radiusArrow << "ball 2 radius " << radiusApple << endl;
+	//std::cout << "Ball 1 radius " << radiusArrow << "ball 2 radius " << radiusApple << endl;
 	// Update the game object (this is currently hard-coded motion)
 	if (input->cmd_x)
 	{
