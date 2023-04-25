@@ -53,6 +53,8 @@ private:
 	KinematicsObject* _physics_object_arrow;       //uncomment both for kinematic
 	//KinematicsObject* _physics_object_apple;
 	DynamicObject* _physics_object_apple;
+	DynamicObject* _physics_object_ball1;
+	DynamicObject* _physics_object_ball2;
 	// Initial velocity variable of the physics object 
 	//for Exercise 5: Use kinematics equations to compute free fall
 	glm::vec3 _v_c; // the initial velocity
