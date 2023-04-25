@@ -6,6 +6,7 @@
 #include "Camera.h"
 #include <cmath>
 #include "KinematicsObject.h"
+#include "DynamicObject.h"
 
 /*! \brief Brief description.
 *  Scene class is a container for loading all the game objects in your simulation or your game. 
@@ -46,12 +47,12 @@ private:
 
 	/** A physics object
 	*/
-	GameObject* _physics_object;
-	GameObject* _physics_object2;
+	//GameObject* _physics_object;  //comment out both for kinematic
+	//GameObject* _physics_object2;
 
-	//KinematicsObject* _physics_object;
-	//KinematicsObject* _physics_object2;
-
+	KinematicsObject* _physics_object_arrow;       //uncomment both for kinematic
+	//KinematicsObject* _physics_object_apple;
+	DynamicObject* _physics_object_apple;
 	// Initial velocity variable of the physics object 
 	//for Exercise 5: Use kinematics equations to compute free fall
 	glm::vec3 _v_c; // the initial velocity
@@ -60,8 +61,9 @@ private:
 
 	bool caughtRobber = false;
 	//ball radius'
-	float radius_ball1;
-	float radius_ball2;
+	float radiusArrow;
+	float radiusApple;
+	glm::vec3 vel;
 
 	/** An example game level in the scene
 	*/
@@ -84,8 +86,8 @@ private:
 	bool _simulation_start;
 
 	
-	float accCop = 0.0f; // acceleration of cop 
-	float accRobber = 0.0f; //acc robber
+	float accelerationApple = 0.0f; // acceleration of cop 
+	float accelerationArrow = 0.0f; //acc robber
 	bool arrowHit = false;
 	bool arrowCanShoot = true;
 

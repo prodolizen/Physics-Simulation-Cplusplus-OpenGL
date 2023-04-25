@@ -48,7 +48,11 @@ public:
 	/** Set scale for the object
 	* @param glm::vec3 vel a 3D vector for the scale of the object
 	*/
-	void SetScale(glm::vec3 scale) { _scale = scale; }
+	void SetScale(glm::vec3 scale) 
+	{ 
+		_scale = scale; 
+		GameObject::SetScale(_scale.x, _scale.y, _scale.z);
+	}
 	/** Get the position of the object
 	* @return a 3D vector 
 	*/
@@ -103,6 +107,7 @@ private:
 	*/
 	bool _start;
 
+	
 };
 
 #endif //!_KinematicsObject_H_
