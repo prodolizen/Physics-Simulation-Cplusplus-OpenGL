@@ -12,6 +12,7 @@ DynamicObject::DynamicObject()
 	_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
 	_mass = 0.0f;
 	_bRadius = 0.0f;
+	//_other_object = new DynamicObject();
 
 	//set values for params
 	_scale = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -20,6 +21,17 @@ DynamicObject::DynamicObject()
 
 DynamicObject::~DynamicObject()
 {
+
+}
+
+void DynamicObject::AddCollisionObject(DynamicObject* obj)
+{
+	if (!obj)
+	{
+		return;
+	}
+
+	_other_object = obj;
 
 }
 
@@ -34,29 +46,30 @@ void DynamicObject::Update(float deltaTs)
 		//add force to total force
 		AddForce(gravityForce);
 
-		//3: compute collisions and responses
-		glm::vec3 bounceForce;
-		glm::vec3 n = glm::vec3(0.0f, 1.0f, 0.0f); //plane normal
-		glm::vec3 c0 = _position; //point on plane
-		glm::vec3 q = glm::vec3(0.0f, 0.0f, 0.0f); //plane vel
-		glm::vec3 c1 = _position + _velocity * deltaTs;
-		glm::vec3 ci(0);
-		float r = GetBoundingRadius();
-		//float d = PFG::DistanceToPlane(n, c0, q);
+		////3: compute collisions and responses
+		//glm::vec3 bounceForce;
+		//glm::vec3 n = glm::vec3(0.0f, 1.0f, 0.0f); //plane normal
+		//glm::vec3 c0 = _position; //point on plane
+		//glm::vec3 q = glm::vec3(0.0f, 0.0f, 0.0f); //plane vel
+		//glm::vec3 c1 = _position + _velocity * deltaTs;
+		//glm::vec3 ci(0);
+		//float r = GetBoundingRadius();
+		////float d = PFG::DistanceToPlane(n, c0, q);
 
-		bool collision = PFG::MovingSphereToPlaneCollision(n, c0, c1, q, r, ci);
-		if (collision)
-		{
-			_position = glm::vec3(c0.x, r, c0.z);
-			//_position = ci;
-			//_position = ci + glm::vec3(0.0f, r, 0.0f);
+		//bool collision = PFG::MovingSphereToPlaneCollision(n, c0, c1, q, r, ci);
+		//if (collision)
+		//{
+		//	_position = glm::vec3(c0.x, r, c0.z);
+		//	//_position = ci;
+		//	//_position = ci + glm::vec3(0.0f, r, 0.0f);
 
-			glm::vec3 contact_force = glm::vec3(0.0f, 9.8f * _mass, 0.0f);
-			AddForce(contact_force);
-			glm::vec3 bounceForce = glm::vec3(0.0f, 150.0f, 0.0f);
-			AddForce(bounceForce);
-		}
+		//	glm::vec3 contact_force = glm::vec3(0.0f, 9.8f * _mass, 0.0f);
+		//	AddForce(contact_force);
+		//	glm::vec3 bounceForce = glm::vec3(0.0f, 150.0f, 0.0f);
+		//	AddForce(bounceForce);
+		//}
 		//4: euler integration
+		ComputeCollisionForces(deltaTs);
 		Euler(deltaTs);
 		//Verlet(deltaTs);
 		//RungeKutta2(deltaTs);
@@ -79,43 +92,46 @@ void DynamicObject::Euler(float deltaTs)
 //lab7
 void DynamicObject::ComputeCollisionForces(float deltaTs)
 {
-	//// a sphere to plane collision detection
-	//float elasticity = 0.5f;
-	//glm::vec3 n = glm::vec3(0.0f, 1.0f, 0.0f);
-	//glm::vec3 c0 = _position;
-	//glm::vec3 q = glm::vec3(0.0f, 0.0f, 0.0f);
-	//glm::vec3 c1 = _position + _velocity * deltaTs;
-	//glm::vec3 ci(0);
-	//float r = GetBoundingRadius();
-	//
-	//bool collision = PFG::MovingSphereToPlaneCollision(n, c0, c1, q, r, ci);
-	//if (collision)
-	//{
-	//	glm::vec3 plane_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
-	//	float collision_impulse = -(1 + elasticity) * glm::dot(_velocity - plane_velocity, n) / (1.0f / _mass);
-	//	glm::vec3 collision_impulse_vector = collision_impulse * n;
-	//	_velocity += collision_impulse_vector / _mass;
-	//	glm::vec3 contact_force = glm::vec3(0.0f, 9.8f * _mass, 0.0f);
-	//	AddForce(contact_force);
-	//}
+	// a sphere to plane collision detection
+	float elasticity1 = 0.5f;
+	glm::vec3 n1 = glm::vec3(0.0f, 1.0f, 0.0f);
+	glm::vec3 c0 = _position;
+	glm::vec3 q = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 c1 = _position + _velocity * deltaTs;
+	glm::vec3 ci(0);
+	float r = GetBoundingRadius();
+	
+	bool collision = PFG::MovingSphereToPlaneCollision(n1, c0, c1, q, r, ci);
+	if (collision)
+	{
+		
+		glm::vec3 plane_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
+		float collision_impulse = -(1 + elasticity1) * glm::dot(_velocity - plane_velocity, n1) / (1.0f / _mass);
+		glm::vec3 collision_impulse_vector = collision_impulse * n1;
+		_velocity += collision_impulse_vector / _mass;
+		glm::vec3 contact_force = glm::vec3(0.0f, 9.8f * _mass, 0.0f);
+		AddForce(contact_force);
+	}
 
 	float elasticity = 0.9f;
-	glm::vec3 position_distance = _other_object->GetPosition() - _position;
+    glm::vec3 position_distance = -_other_object->GetPosition() + _position;
+	std::cout << "pos " << _position.y << "other object position " << _other_object->GetPosition().y << std::endl;
 	glm::vec3 n = glm::normalize(position_distance);
 	float r1 = _bRadius;
 	float r2 = _other_object->GetBoundingRadius();
 	glm::vec3 object2_velocity = _other_object->GetVelocity();
 	float distance = glm::length(position_distance);
-
-	if (distance <= r1 + r2)
+	//std::cout << "position_distance " << position_distance.y << "distance " << distance << std::endl;
+	if (distance <= 0.6f)
 	{
+		std::cout << "collision";
 		float one_over_mass1 = 1.0f / _mass;
 		float one_over_mass2 = 1.0f / _other_object->GetMass();
 		float collision_impulse = -(1 + elasticity) * glm::dot((_velocity - object2_velocity), n) / (one_over_mass1 + one_over_mass2);
 		glm::vec3 collision_impulse_vector = collision_impulse * n;;
 		_velocity += collision_impulse_vector / _mass;
-		glm::vec3 contact_force = glm::vec3(0.0f, 9.8f * _mass, 0.0f);
-		AddForce(contact_force);
+		//glm::vec3 contact_force = glm::vec3(0.0f, 9.8f * _mass, 0.0f);
+		//AddForce(contact_force);
 
 		object2_velocity -= collision_impulse_vector / _other_object->GetMass();
 		_other_object->SetVelocity(object2_velocity);

@@ -177,6 +177,13 @@ Scene::Scene()
 
 	_physics_object_ball2->SetMaterial(objectMaterial3);
 	_physics_object_ball2->SetVelocity(glm::vec3(0.0f, 0.0f, 0.0f));
+
+	_physics_object_ball1->AddCollisionObject(_physics_object_ball2);
+	_physics_object_ball2->AddCollisionObject(_physics_object_ball1);
+	_physics_object_apple->AddCollisionObject(_physics_object_ball1);
+	_physics_object_apple->AddCollisionObject(_physics_object_ball2);
+	_physics_object_ball2->AddCollisionObject(_physics_object_apple);
+	_physics_object_ball1->AddCollisionObject(_physics_object_apple);
 }
 
 Scene::~Scene()
