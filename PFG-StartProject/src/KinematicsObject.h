@@ -53,6 +53,9 @@ public:
 		_scale = scale; 
 		GameObject::SetScale(_scale.x, _scale.y, _scale.z);
 	}
+
+	glm::vec3 GetScale() { return _scale; }
+
 	/** Get the position of the object
 	* @return a 3D vector 
 	*/

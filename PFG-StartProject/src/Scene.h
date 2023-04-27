@@ -69,7 +69,8 @@ private:
 
 	/** An example game level in the scene
 	*/
-	GameObject* _level; 
+	GameObject* _level;
+	GameObject* _wall1;
 	/** The main camera in the scene 
 	*/
 	Camera* _camera; 

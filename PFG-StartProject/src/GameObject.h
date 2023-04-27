@@ -51,6 +51,7 @@ public:
 	* @param float sZ z scale
 	*/
 	void SetScale(float sX, float sY, float sZ) { _scale.x = sX; _scale.y = sY; _scale.z = sZ; }
+	glm::vec3 GetScale() { return _scale; }
 	
 	/** Function for getting position of the game object
 	* @return The result

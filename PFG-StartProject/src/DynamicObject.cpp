@@ -93,7 +93,7 @@ void DynamicObject::Euler(float deltaTs)
 void DynamicObject::ComputeCollisionForces(float deltaTs)
 {
 	// a sphere to plane collision detection
-	float elasticity1 = 0.5f;
+	float elasticity1 = 0.6f;
 	glm::vec3 n1 = glm::vec3(0.0f, 1.0f, 0.0f);
 	glm::vec3 c0 = _position;
 	glm::vec3 q = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -115,16 +115,16 @@ void DynamicObject::ComputeCollisionForces(float deltaTs)
 
 	float elasticity = 0.9f;
     glm::vec3 position_distance = -_other_object->GetPosition() + _position;
-	std::cout << "pos " << _position.y << "other object position " << _other_object->GetPosition().y << std::endl;
 	glm::vec3 n = glm::normalize(position_distance);
 	float r1 = _bRadius;
 	float r2 = _other_object->GetBoundingRadius();
 	glm::vec3 object2_velocity = _other_object->GetVelocity();
-	float distance = glm::length(position_distance);
+	float distance = glm::length(position_distance.y);
 	//std::cout << "position_distance " << position_distance.y << "distance " << distance << std::endl;
+	//std::cout
 	if (distance <= 0.6f)
 	{
-		std::cout << "collision";
+		//std::cout << "ball on ball collision";
 		float one_over_mass1 = 1.0f / _mass;
 		float one_over_mass2 = 1.0f / _other_object->GetMass();
 		float collision_impulse = -(1 + elasticity) * glm::dot((_velocity - object2_velocity), n) / (one_over_mass1 + one_over_mass2);

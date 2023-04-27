@@ -26,6 +26,7 @@ Scene::Scene()
 	
 	// Create a game level object
 	_level = new GameObject();
+	_wall1 = new GameObject();
 	
 	// Create the material for the game object- level
 	Material *modelMaterial = new Material();
@@ -55,6 +56,21 @@ Scene::Scene()
 	_level->SetRotation(3.141590f, 0.0f, 0.0f);
 	_level->SetScale(2.0f, 1.0f, 2.0f);
 
+	//wall1
+	Material* modelMaterialwall = new Material();
+	modelMaterialwall->LoadShaders("assets/shaders/VertShader.txt", "assets/shaders/FragShader.txt");
+	modelMaterialwall->SetDiffuseColour(glm::vec3(0.8, 0.0, 0.8));
+	modelMaterialwall->SetTexture("assets/textures/diffuse.bmp");
+	modelMaterialwall->SetLightPosition(_lightPosition);
+	_wall1->SetMaterial(modelMaterialwall);
+
+	Mesh* wall1Mesh = new Mesh();
+	wall1Mesh->LoadOBJ("assets/models/cube.obj");
+	_wall1->SetMesh(wall1Mesh);
+
+	_wall1->SetPosition(10.0f, 0.0f, 0.0f); // Update the position
+	_wall1->SetRotation(0.0f, 0.0f, 0.0f); // Reset the rotation values
+	_wall1->SetScale(0.0f, 1.5f, 4.0f); // Update the scale values
 
 	// Create the material for the game object- level arrow
 	radiusArrow = 0.3f;
@@ -195,6 +211,7 @@ Scene::~Scene()
 	delete _camera;
 	delete _physics_object_ball1;
 	delete _physics_object_ball2;
+	delete _wall1;
 }
 
 void Scene::Update(float deltaTs, Input* input)
@@ -232,6 +249,8 @@ void Scene::Update(float deltaTs, Input* input)
 		// Get the positions of the two balls
 		glm::vec3 posArrow = _physics_object_arrow->GetPosition();
 		glm::vec3 posApple = _physics_object_apple->GetPosition();
+
+		glm::vec3 posWall1 = _wall1->GetPosition();
 		//_physics_object_apple->StartSimulation(_simulation_start);
 
 		//if(arrowCanShoot == false) //applies the downwards displacement of the apple to the arrow once they collide so they fall together
@@ -263,8 +282,16 @@ void Scene::Update(float deltaTs, Input* input)
 			_physics_object_apple->StartSimulation(_simulation_start);
 		}
 
+		float distancetoWall = glm::length(posWall1.x - posArrow.x);
+		//float distancetoWall = glm::distance(posWall1, posArrow);
+		std::cout << distancetoWall << endl;
 		
-		
+
+		if (distancetoWall <= 0.3f)
+		{
+			_physics_object_arrow->StartSimulation(false);
+		}
+
 
 		// Lab2: Use kinematics equations to compute kinematics motion
 		// We compute the motion of the object with a series of time steps. 
@@ -297,6 +324,7 @@ void Scene::Update(float deltaTs, Input* input)
 	_camera->Update(input);
 	_physics_object_ball1->Update(deltaTs);
 	_physics_object_ball2->Update(deltaTs);
+	_wall1->Update(deltaTs);
 
 	_viewMatrix = _camera->GetView();
 	_projMatrix = _camera->GetProj();
@@ -312,7 +340,8 @@ void Scene::Draw()
 	_level->Draw(_viewMatrix, _projMatrix);
 	_physics_object_ball1->Draw(_viewMatrix, _projMatrix);
 	_physics_object_ball2->Draw(_viewMatrix, _projMatrix);
-
+	_wall1->Draw(_viewMatrix, _projMatrix);
 }
+
 
 
