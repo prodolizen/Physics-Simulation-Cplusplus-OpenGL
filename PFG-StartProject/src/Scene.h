@@ -71,6 +71,9 @@ private:
 	*/
 	GameObject* _level;
 	GameObject* _wall1;
+	GameObject* _wall2;
+	GameObject* _wall3; 
+	GameObject* _wall4; 
 	/** The main camera in the scene 
 	*/
 	Camera* _camera; 
