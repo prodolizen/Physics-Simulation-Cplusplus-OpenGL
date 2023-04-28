@@ -141,7 +141,7 @@ Scene::Scene()
 	modelMesh->LoadOBJ("assets/models/sphere.obj");
 	// Tell the game object to use this mesh
 	_physics_object_arrow->SetMesh(modelMesh);
-	_physics_object_arrow->SetPosition(glm::vec3(0.0f, radiusArrow, 0.0f));
+	_physics_object_arrow->SetPosition(glm::vec3(0.0f, radiusArrow, 5.0f));
 	//_physics_object->SetScale(radiusArrow, radiusArrow, radiusArrow);			//comment out when kinematic obj
 	//Set initial velocity if using phyics object									//comment out when kinematic obj
 	//_v_c = glm::vec3(0.0f, 2.0f, 0.0f);											//comment out when kinematic obj
@@ -200,7 +200,7 @@ Scene::Scene()
 
 	//dynamic stuff 
 	_physics_object_apple->SetMesh(modelMesh2);
-	_physics_object_apple->SetPosition(glm::vec3(7.0f, 5.0f, 0.0f));
+	_physics_object_apple->SetPosition(glm::vec3(7.0f, 5.0f, 5.0f));
 	_physics_object_apple->SetVelocity(glm::vec3(0.0f, 0.0f, 0.0f));
 	_physics_object_apple->SetMass(3.0f);
 	_physics_object_apple->SetScale(glm::vec3(radiusApple, radiusApple, radiusApple));
@@ -333,21 +333,40 @@ void Scene::Update(float deltaTs, Input* input)
 		}
 
 		float distancetoWall = glm::length(posWall1.x - posArrow.x);
-		//float distancetoWall = glm::distance(posWall1, posArrow);
+		float distancetoWall2 = glm::length(posWall2.x - posArrow.x);
 		//std::cout << distancetoWall << endl;
+		float decceleration = 0.5f;
+		glm::vec3 currentVelocity = _physics_object_arrow->GetVelocity();
 		
-
+		//std::cout << _physics_object_arrow->GetPosition().y;
 		if (distancetoWall <= 0.3f)
 		{
+		
+			if (_physics_object_arrow->GetPosition().y >= 0.31f)
+			{
+				currentVelocity.x = -currentVelocity.x;
+				currentVelocity.y = -currentVelocity.y;
+				_physics_object_arrow->SetVelocity(currentVelocity);
+			}
+			else
+			{
+				currentVelocity.x = -currentVelocity.x;
+				currentVelocity.x = currentVelocity.x * decceleration;
+				_physics_object_arrow->SetVelocity(currentVelocity); 
+			}
+			
+		}
+		if (distancetoWall2 <= 0.3f)
+		{
+			std::cout << "hit wall 2" << endl;
 			glm::vec3 currentVelocity = _physics_object_arrow->GetVelocity();
 			currentVelocity.x = -currentVelocity.x;
-			currentVelocity.y = -currentVelocity.y;
+			currentVelocity.x = currentVelocity.x * decceleration;
 			_physics_object_arrow->SetVelocity(currentVelocity);
 		}
 
+		std::cout << std::abs(currentVelocity.x) << endl;
 		
-
-
 		// Lab2: Use kinematics equations to compute kinematics motion
 		// We compute the motion of the object with a series of time steps. 
 		// For each of the time steps, following procedures should be carried out
