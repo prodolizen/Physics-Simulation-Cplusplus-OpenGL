@@ -337,16 +337,19 @@ void Scene::Update(float deltaTs, Input* input)
 			_physics_object_apple->StartSimulation(_simulation_start);
 		}
 
-		float distancetoWall = glm::length(posWall1.x - posArrow.x);
-		float distancetoWall2 = glm::length(posWall2.x - posArrow.x);
-		//std::cout << distancetoWall << endl;
+		float disWall1Arrow = glm::length(posWall1.x - posArrow.x);
+		float disWall2Arrow = glm::length(posWall2.x - posArrow.x);
+		float disWall1Apple = glm::length(posWall1.x - posApple.x);
+		float disWall2Apple = glm::length(posWall2.x - _physics_object_apple->GetPosition().x);
+
+		//	std::cout << distancetoWall2 << endl;
 		float decceleration = 0.5f;
 		glm::vec3 currentVelocity = _physics_object_arrow->GetVelocity();
-		
+		//0.0769367
 		//std::cout << _physics_object_arrow->GetPosition().y;
-		if (distancetoWall <= 0.3f)
+		if (disWall1Arrow <= 0.3f || disWall2Arrow <= 0.3f)
 		{
-		
+
 			if (_physics_object_arrow->GetPosition().y >= 0.31f)
 			{
 				currentVelocity.x = -currentVelocity.x;
@@ -357,17 +360,27 @@ void Scene::Update(float deltaTs, Input* input)
 			{
 				currentVelocity.x = -currentVelocity.x;
 				currentVelocity.x = currentVelocity.x * decceleration;
-				_physics_object_arrow->SetVelocity(currentVelocity); 
+				_physics_object_arrow->SetVelocity(currentVelocity);
 			}
-			
+
 		}
-		if (distancetoWall2 <= 0.3f)
+
+		//apple arrow floor col
+		if (_physics_object_arrow->GetPosition().y == 0.3f)
 		{
-			std::cout << "hit wall 2" << endl;
-			glm::vec3 currentVelocity = _physics_object_arrow->GetVelocity();
-			currentVelocity.x = -currentVelocity.x;
-			currentVelocity.x = currentVelocity.x * decceleration;
-			_physics_object_arrow->SetVelocity(currentVelocity);
+			float radius = 0.3f;
+			float arrowX = _physics_object_arrow->GetPosition().x;
+			float appleX = _physics_object_apple->GetPosition().x;
+
+			// Calculate the distance between the two objects on the x-axis
+			float distanceX = abs(arrowX - appleX);
+
+			// Check if the distance between the two objects is less than or equal to the sum of their radii
+			if (distanceX <= 2 * radius)
+			{
+				_physics_object_apple->SetVelocity(glm::vec3(1.0f, 0.0f, 0.0f));
+			}
+
 		}
 
 	//	std::cout << std::abs(currentVelocity.x) << endl;
