@@ -141,7 +141,7 @@ Scene::Scene()
 	modelMesh->LoadOBJ("assets/models/sphere.obj");
 	// Tell the game object to use this mesh
 	_physics_object_arrow->SetMesh(modelMesh);
-	_physics_object_arrow->SetPosition(glm::vec3(0.0f, radiusArrow, 5.0f));
+	_physics_object_arrow->SetPosition(glm::vec3(-5.0f, radiusArrow, 5.0f));
 	//_physics_object->SetScale(radiusArrow, radiusArrow, radiusArrow);			//comment out when kinematic obj
 	//Set initial velocity if using phyics object									//comment out when kinematic obj
 	//_v_c = glm::vec3(0.0f, 2.0f, 0.0f);											//comment out when kinematic obj
@@ -150,7 +150,7 @@ Scene::Scene()
 
 	float angle = 35.8f;
 	angle = glm::radians(angle);																		//UNCOMMENT when kinematic obj
-	float vel_magnitude = 25.0f;
+	float vel_magnitude = 15.0f;
 	vel.x = vel_magnitude * cos(angle);
 	vel.y = vel_magnitude * sin(angle);
 	vel.z = 0.0f;
@@ -200,7 +200,7 @@ Scene::Scene()
 
 	//dynamic stuff 
 	_physics_object_apple->SetMesh(modelMesh2);
-	_physics_object_apple->SetPosition(glm::vec3(7.0f, 5.0f, 5.0f));
+	_physics_object_apple->SetPosition(glm::vec3(7.0f, 4.0f, 5.0f));
 	_physics_object_apple->SetVelocity(glm::vec3(0.0f, 0.0f, 0.0f));
 	_physics_object_apple->SetMass(3.0f);
 	_physics_object_apple->SetScale(glm::vec3(radiusApple, radiusApple, radiusApple));
@@ -365,7 +365,7 @@ void Scene::Update(float deltaTs, Input* input)
 			_physics_object_arrow->SetVelocity(currentVelocity);
 		}
 
-		std::cout << std::abs(currentVelocity.x) << endl;
+	//	std::cout << std::abs(currentVelocity.x) << endl;
 		
 		// Lab2: Use kinematics equations to compute kinematics motion
 		// We compute the motion of the object with a series of time steps. 

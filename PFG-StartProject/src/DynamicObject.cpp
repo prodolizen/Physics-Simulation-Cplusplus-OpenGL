@@ -70,10 +70,10 @@ void DynamicObject::Update(float deltaTs)
 		//}
 		//4: euler integration
 		ComputeCollisionForces(deltaTs);
-		Euler(deltaTs);
+	//	Euler(deltaTs);
 		//Verlet(deltaTs);
 		//RungeKutta2(deltaTs);
-		//RungeKutta4(deltaTs);
+		RungeKutta4(deltaTs);
 	}
 
 	//update model matrix with current pos, orientation and scale
@@ -93,7 +93,7 @@ void DynamicObject::Euler(float deltaTs)
 void DynamicObject::ComputeCollisionForces(float deltaTs)
 {
 	// a sphere to plane collision detection
-	float elasticity1 = 0.6f;
+	float elasticity1 = 0.7f;
 	glm::vec3 n1 = glm::vec3(0.0f, 1.0f, 0.0f);
 	glm::vec3 c0 = _position;
 	glm::vec3 q = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -124,14 +124,14 @@ void DynamicObject::ComputeCollisionForces(float deltaTs)
 	//std::cout
 	if (distance <= 0.6f)
 	{
-		//std::cout << "ball on ball collision";
+		std::cout << "ball on ball collision";
 		float one_over_mass1 = 1.0f / _mass;
 		float one_over_mass2 = 1.0f / _other_object->GetMass();
 		float collision_impulse = -(1 + elasticity) * glm::dot((_velocity - object2_velocity), n) / (one_over_mass1 + one_over_mass2);
 		glm::vec3 collision_impulse_vector = collision_impulse * n;;
 		_velocity += collision_impulse_vector / _mass;
-		//glm::vec3 contact_force = glm::vec3(0.0f, 9.8f * _mass, 0.0f);
-		//AddForce(contact_force);
+		/*glm::vec3 contact_force = glm::vec3(0.0f, 9.8f * _mass, 0.0f);
+		AddForce(contact_force);*/
 
 		object2_velocity -= collision_impulse_vector / _other_object->GetMass();
 		_other_object->SetVelocity(object2_velocity);
