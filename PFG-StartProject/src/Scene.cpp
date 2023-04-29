@@ -244,7 +244,12 @@ Scene::Scene()
 	_physics_object_apple->AddCollisionObject(_physics_object_ball2);
 	_physics_object_ball2->AddCollisionObject(_physics_object_apple);
 	_physics_object_ball1->AddCollisionObject(_physics_object_apple);
+
+	//set object types 
+	_physics_object_ball1->SetType(SPHERE);
+	_physics_object_ball2->SetType(SPHERE);
 }
+
 
 Scene::~Scene()
 {

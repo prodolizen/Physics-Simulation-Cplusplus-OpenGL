@@ -113,32 +113,35 @@ void DynamicObject::ComputeCollisionForces(float deltaTs)
 		AddForce(contact_force);
 	}
 
-	float elasticity = 0.9f;
-    glm::vec3 position_distance = -_other_object->GetPosition() + _position;
-	glm::vec3 n = glm::normalize(position_distance);
-	float r1 = _bRadius;
-	float r2 = _other_object->GetBoundingRadius();
-	glm::vec3 object2_velocity = _other_object->GetVelocity();
-	float distance = glm::length(position_distance.y);
-	//std::cout << "position_distance " << position_distance.y << "distance " << distance << std::endl;
-	//std::cout
-	if (distance <= 0.6f)
-	{
-		std::cout << "ball on ball collision";
-		float one_over_mass1 = 1.0f / _mass;
-		float one_over_mass2 = 1.0f / _other_object->GetMass();
-		float collision_impulse = -(1 + elasticity) * glm::dot((_velocity - object2_velocity), n) / (one_over_mass1 + one_over_mass2);
-		glm::vec3 collision_impulse_vector = collision_impulse * n;;
-		_velocity += collision_impulse_vector / _mass;
-		/*glm::vec3 contact_force = glm::vec3(0.0f, 9.8f * _mass, 0.0f);
-		AddForce(contact_force);*/
+	//if (_type == SPHERE && _other_object->GetType() == SPHERE)
+//	{
+		float elasticity = 0.9f;
+		glm::vec3 position_distance = -_other_object->GetPosition() + _position;
+		glm::vec3 n = glm::normalize(position_distance);
+		float r1 = _bRadius;
+		float r2 = _other_object->GetBoundingRadius();
+		glm::vec3 object2_velocity = _other_object->GetVelocity();
+		float distance = glm::length(position_distance.y);
+		//std::cout << "position_distance " << position_distance.y << "distance " << distance << std::endl;
+		//std::cout
+		if (distance <= 0.6f)
+		{
+		//	std::cout << "ball on ball collision";
+			float one_over_mass1 = 1.0f / _mass;
+			float one_over_mass2 = 1.0f / _other_object->GetMass();
+			float collision_impulse = -(1 + elasticity) * glm::dot((_velocity - object2_velocity), n) / (one_over_mass1 + one_over_mass2);
+			glm::vec3 collision_impulse_vector = collision_impulse * n;;
+			_velocity += collision_impulse_vector / _mass;
+			/*glm::vec3 contact_force = glm::vec3(0.0f, 9.8f * _mass, 0.0f);
+			AddForce(contact_force);*/
 
-		object2_velocity -= collision_impulse_vector / _other_object->GetMass();
-		_other_object->SetVelocity(object2_velocity);
-		
-		glm::vec3 contact_force2 = glm::vec3(0.0f, 9.8f * _other_object->GetMass(), 0.0f);
-		_other_object->AddForce(contact_force2);
-	}
+			object2_velocity -= collision_impulse_vector / _other_object->GetMass();
+			_other_object->SetVelocity(object2_velocity);
+
+			glm::vec3 contact_force2 = glm::vec3(0.0f, 9.8f * _other_object->GetMass(), 0.0f);
+			_other_object->AddForce(contact_force2);
+		}
+	//}
 }
 
 void DynamicObject::UpdateModelMatrix()
