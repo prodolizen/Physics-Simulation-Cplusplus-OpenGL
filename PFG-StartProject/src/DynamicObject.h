@@ -127,6 +127,8 @@ public:
 	void ComputeCollisionForces(float deltaTs);
 
 	glm::vec3 GetVelocity() { return _velocity; }
+
+	void AddCollisionObject(DynamicObject* obj);
 private:
 
 	/**Update the model matrix with the current position, orientation and scale

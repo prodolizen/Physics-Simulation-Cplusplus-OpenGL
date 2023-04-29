@@ -1,4 +1,6 @@
 #include "Scene.h"
+#include <glm/gtx/string_cast.hpp>
+#include <iostream>
 /*! \brief Brief description.
 *  Scene class is a container for loading all the game objects in your simulation or your game.
 *
@@ -16,16 +18,18 @@ Scene::Scene()
 
 	//create a kinematics object
 	_physics_object_arrow = new KinematicsObject();
-	//_physics_object_apple = new KinematicsObject();
+	
+	//creates dynamic objects
 	_physics_object_apple = new DynamicObject();
 	_physics_object_ball1 = new DynamicObject();
 	_physics_object_ball2 = new DynamicObject();
-	// Create a game object
-	//_physics_object = new GameObject();
-	//_physics_object2 = new GameObject();
 	
 	// Create a game level object
 	_level = new GameObject();
+	_wall1 = new GameObject();
+	_wall2 = new GameObject();
+	_wall3 = new GameObject();
+	_wall4 = new GameObject();
 	
 	// Create the material for the game object- level
 	Material *modelMaterial = new Material();
@@ -55,7 +59,63 @@ Scene::Scene()
 	_level->SetRotation(3.141590f, 0.0f, 0.0f);
 	_level->SetScale(2.0f, 1.0f, 2.0f);
 
+	//wall1
+	Material* modelMaterialwall = new Material();
+	modelMaterialwall->LoadShaders("assets/shaders/VertShader.txt", "assets/shaders/FragShader.txt");
+	modelMaterialwall->SetDiffuseColour(glm::vec3(0.8, 0.0, 0.8));
+	modelMaterialwall->SetTexture("assets/textures/diffuse.bmp");
+	modelMaterialwall->SetLightPosition(_lightPosition);
+	_wall1->SetMaterial(modelMaterialwall);
+	Mesh* wall1Mesh = new Mesh();
+	wall1Mesh->LoadOBJ("assets/models/cube.obj");
+	_wall1->SetMesh(wall1Mesh);
+	_wall1->SetPosition(10.0f, 0.0f, 0.0f); // Update the position
+	_wall1->SetRotation(0.0f, 0.0f, 0.0f); // Reset the rotation values
+	_wall1->SetScale(0.1f, 1.5f, 4.0f); // Update the scale values
 
+	// Wall 2
+	Material* modelMaterialwall2 = new Material();
+	modelMaterialwall2->LoadShaders("assets/shaders/VertShader.txt", "assets/shaders/FragShader.txt");
+	modelMaterialwall2->SetDiffuseColour(glm::vec3(0.8, 0.0, 0.8));
+	modelMaterialwall2->SetTexture("assets/textures/diffuse.bmp");
+	modelMaterialwall2->SetLightPosition(_lightPosition);
+	_wall2->SetMaterial(modelMaterialwall2);
+	Mesh* wall2Mesh = new Mesh();
+	wall2Mesh->LoadOBJ("assets/models/cube.obj");
+	_wall2->SetMesh(wall2Mesh);
+	_wall2->SetPosition(-10.0f, 0.0f, 0.0f); // Update the position
+	_wall2->SetRotation(0.0f, 0.0f, 0.0f); // Reset the rotation values
+	_wall2->SetScale(0.1f, 0.6f, 4.0f); // Update the scale values
+
+	// Wall 3
+	Material* modelMaterialwall3 = new Material();
+	modelMaterialwall3->LoadShaders("assets/shaders/VertShader.txt", "assets/shaders/FragShader.txt");
+	modelMaterialwall3->SetDiffuseColour(glm::vec3(0.8, 0.0, 0.8));
+	modelMaterialwall3->SetTexture("assets/textures/diffuse.bmp");
+	modelMaterialwall3->SetLightPosition(_lightPosition);
+	_wall3->SetMaterial(modelMaterialwall3);
+	Mesh* wall3Mesh = new Mesh();
+	wall3Mesh->LoadOBJ("assets/models/cube.obj");
+	_wall3->SetMesh(wall3Mesh);
+	_wall3->SetPosition(0.0f, 0.0f, 10.0f); // Update the position
+	_wall3->SetRotation(0.0f, 0.0f, 0.0f); // Reset the rotation values
+	_wall3->SetScale(4.0f, 0.6f, 0.1f); // Update the scale values
+
+	// Wall 4
+	Material* modelMaterialwall4 = new Material();
+	modelMaterialwall4->LoadShaders("assets/shaders/VertShader.txt", "assets/shaders/FragShader.txt");
+	modelMaterialwall4->SetDiffuseColour(glm::vec3(0.8, 0.0, 0.8));
+	modelMaterialwall4->SetTexture("assets/textures/diffuse.bmp");
+	modelMaterialwall4->SetLightPosition(_lightPosition);
+	_wall4->SetMaterial(modelMaterialwall4);
+	Mesh* wall4Mesh = new Mesh();
+	wall4Mesh->LoadOBJ("assets/models/cube.obj");
+	_wall4->SetMesh(wall4Mesh);
+	_wall4->SetPosition(0.0f, 0.0f, -10.0f);
+	_wall4->SetRotation(0.0f, 0.0f, 0.0f);
+	_wall4->SetScale(4.0f, 0.6f, 0.1f);
+
+	
 	// Create the material for the game object- level arrow
 	radiusArrow = 0.3f;
 	Material *objectMaterial = new Material();
@@ -81,7 +141,7 @@ Scene::Scene()
 	modelMesh->LoadOBJ("assets/models/sphere.obj");
 	// Tell the game object to use this mesh
 	_physics_object_arrow->SetMesh(modelMesh);
-	_physics_object_arrow->SetPosition(glm::vec3(0.0f, radiusArrow, 0.0f));
+	_physics_object_arrow->SetPosition(glm::vec3(0.0f, radiusArrow, 5.0f));
 	//_physics_object->SetScale(radiusArrow, radiusArrow, radiusArrow);			//comment out when kinematic obj
 	//Set initial velocity if using phyics object									//comment out when kinematic obj
 	//_v_c = glm::vec3(0.0f, 2.0f, 0.0f);											//comment out when kinematic obj
@@ -140,7 +200,7 @@ Scene::Scene()
 
 	//dynamic stuff 
 	_physics_object_apple->SetMesh(modelMesh2);
-	_physics_object_apple->SetPosition(glm::vec3(7.0f, 5.0f, 0.0f));
+	_physics_object_apple->SetPosition(glm::vec3(7.0f, 5.0f, 5.0f));
 	_physics_object_apple->SetVelocity(glm::vec3(0.0f, 0.0f, 0.0f));
 	_physics_object_apple->SetMass(3.0f);
 	_physics_object_apple->SetScale(glm::vec3(radiusApple, radiusApple, radiusApple));
@@ -177,6 +237,13 @@ Scene::Scene()
 
 	_physics_object_ball2->SetMaterial(objectMaterial3);
 	_physics_object_ball2->SetVelocity(glm::vec3(0.0f, 0.0f, 0.0f));
+
+	_physics_object_ball1->AddCollisionObject(_physics_object_ball2);
+	_physics_object_ball2->AddCollisionObject(_physics_object_ball1);
+	_physics_object_apple->AddCollisionObject(_physics_object_ball1);
+	_physics_object_apple->AddCollisionObject(_physics_object_ball2);
+	_physics_object_ball2->AddCollisionObject(_physics_object_apple);
+	_physics_object_ball1->AddCollisionObject(_physics_object_apple);
 }
 
 Scene::~Scene()
@@ -188,6 +255,10 @@ Scene::~Scene()
 	delete _camera;
 	delete _physics_object_ball1;
 	delete _physics_object_ball2;
+	delete _wall1;
+	delete _wall2;
+	delete _wall3;
+	delete _wall4;
 }
 
 void Scene::Update(float deltaTs, Input* input)
@@ -225,6 +296,11 @@ void Scene::Update(float deltaTs, Input* input)
 		// Get the positions of the two balls
 		glm::vec3 posArrow = _physics_object_arrow->GetPosition();
 		glm::vec3 posApple = _physics_object_apple->GetPosition();
+
+		glm::vec3 posWall1 = _wall1->GetPosition();
+		glm::vec3 posWall2 = _wall2->GetPosition();
+		glm::vec3 posWall3 = _wall3->GetPosition();
+		glm::vec3 posWall4 = _wall4->GetPosition();
 		//_physics_object_apple->StartSimulation(_simulation_start);
 
 		//if(arrowCanShoot == false) //applies the downwards displacement of the apple to the arrow once they collide so they fall together
@@ -244,7 +320,7 @@ void Scene::Update(float deltaTs, Input* input)
 		// If the distance between the balls is less than or equal to the sum of their radii, then they have collided
 		if (distance <= 0.6f)
 		{
-			std::cout << "hit" << endl;
+			//std::cout << "hit" << endl;
 			arrowHit = true;
 			arrowCanShoot = false;
 		}
@@ -256,9 +332,41 @@ void Scene::Update(float deltaTs, Input* input)
 			_physics_object_apple->StartSimulation(_simulation_start);
 		}
 
+		float distancetoWall = glm::length(posWall1.x - posArrow.x);
+		float distancetoWall2 = glm::length(posWall2.x - posArrow.x);
+		//std::cout << distancetoWall << endl;
+		float decceleration = 0.5f;
+		glm::vec3 currentVelocity = _physics_object_arrow->GetVelocity();
 		
+		//std::cout << _physics_object_arrow->GetPosition().y;
+		if (distancetoWall <= 0.3f)
+		{
 		
+			if (_physics_object_arrow->GetPosition().y >= 0.31f)
+			{
+				currentVelocity.x = -currentVelocity.x;
+				currentVelocity.y = -currentVelocity.y;
+				_physics_object_arrow->SetVelocity(currentVelocity);
+			}
+			else
+			{
+				currentVelocity.x = -currentVelocity.x;
+				currentVelocity.x = currentVelocity.x * decceleration;
+				_physics_object_arrow->SetVelocity(currentVelocity); 
+			}
+			
+		}
+		if (distancetoWall2 <= 0.3f)
+		{
+			std::cout << "hit wall 2" << endl;
+			glm::vec3 currentVelocity = _physics_object_arrow->GetVelocity();
+			currentVelocity.x = -currentVelocity.x;
+			currentVelocity.x = currentVelocity.x * decceleration;
+			_physics_object_arrow->SetVelocity(currentVelocity);
+		}
 
+		std::cout << std::abs(currentVelocity.x) << endl;
+		
 		// Lab2: Use kinematics equations to compute kinematics motion
 		// We compute the motion of the object with a series of time steps. 
 		// For each of the time steps, following procedures should be carried out
@@ -290,11 +398,13 @@ void Scene::Update(float deltaTs, Input* input)
 	_camera->Update(input);
 	_physics_object_ball1->Update(deltaTs);
 	_physics_object_ball2->Update(deltaTs);
+	_wall1->Update(deltaTs);
+	_wall2->Update(deltaTs);
+	_wall3->Update(deltaTs);
+	_wall4->Update(deltaTs);
 
 	_viewMatrix = _camera->GetView();
-	_projMatrix = _camera->GetProj();
-	
-														
+	_projMatrix = _camera->GetProj();										
 }
 
 void Scene::Draw()
@@ -305,7 +415,11 @@ void Scene::Draw()
 	_level->Draw(_viewMatrix, _projMatrix);
 	_physics_object_ball1->Draw(_viewMatrix, _projMatrix);
 	_physics_object_ball2->Draw(_viewMatrix, _projMatrix);
-
+	_wall1->Draw(_viewMatrix, _projMatrix);
+	_wall2->Draw(_viewMatrix, _projMatrix);
+	_wall3->Draw(_viewMatrix, _projMatrix);
+	_wall4->Draw(_viewMatrix, _projMatrix);
 }
+
 
 
